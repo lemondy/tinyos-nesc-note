@@ -1,6 +1,6 @@
 
 module BlinkC{
-}implements{
+}implementation{
 
 uses interface StdControl;
 uses interface TimeMill
