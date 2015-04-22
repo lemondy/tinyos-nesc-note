@@ -6,7 +6,7 @@
 - **确定起点和终点的最短路径问题：**求两个定点之间的最短路径。
 - **全局最短路径问题：**图中任意两个点之间的最短路径问题。使用Floyd-Warshall算法。
 
-常用的路径算法：
+常用的最短路径算法：
 
 - [Dijkstra算法](http://zh.wikipedia.org/wiki/%E6%88%B4%E5%85%8B%E6%96%AF%E7%89%B9%E6%8B%89%E7%AE%97%E6%B3%95)
 - [A*算法](http://zh.wikipedia.org/wiki/A*%E6%90%9C%E5%AF%BB%E7%AE%97%E6%B3%95)
