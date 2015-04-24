@@ -1,4 +1,4 @@
-## Node_to_Node radio communication
+## mote-mote radio communication
  
 > 这次笔记记录的是节点与节点之间通信的知识。
  
