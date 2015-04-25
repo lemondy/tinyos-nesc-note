@@ -6,6 +6,8 @@
  * Published under the terms of the GNU General Public License (GPLv2).
  */
 
+#include "AODV.h"
+
 #define AODV_DEBUG  1
 
 module AODV_M {
@@ -23,12 +25,17 @@ module AODV_M {
     interface Random;
     interface AMPacket;
     interface Packet;
+
+    interface AMSend as SendHELLO;
     interface AMSend as SendRREQ;
     interface AMSend as SendRREP;
     interface AMSend as SendRERR;
+
     interface Receive as ReceiveRREQ;
     interface Receive as ReceiveRREP;
     interface Receive as ReceiveRERR;
+    interface Receive as ReceiveHELLO;
+
     interface AMSend as SubSend;
     interface Receive as SubReceive;
     interface PacketAcknowledgements;

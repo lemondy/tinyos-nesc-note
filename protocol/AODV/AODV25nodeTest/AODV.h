@@ -8,6 +8,26 @@
  #ifndef AODV_H
  #define AODV_H
 
+ #define AM_AODV_HELLO         9
+#define AM_AODV_RREQ          10
+#define AM_AODV_RREP          11
+#define AM_AODV_RERR          12
+#define AM_AODV_MSG           13
+
+enum{
+  HELLO = 0xffff
+};
+
+typedef nx_struct{
+  nx_uint8_t seq;
+  nx_uint16_t hello;
+  nx_uint8_t src;
+} send_hello;
+
+typedef nx_struct{
+  nx_uint8_t seq;
+  nx_uint8_t me;
+} receive_hello;
 
 typedef nx_struct {
   nx_uint8_t    seq;

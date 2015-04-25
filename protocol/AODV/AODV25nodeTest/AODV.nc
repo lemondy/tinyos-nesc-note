@@ -6,12 +6,10 @@
  * Published under the terms of the GNU General Public License (GPLv2).
  */
  
-includes AODV;
+//includes AODV;
+#include "AODV.h"
 
-#define AM_AODV_RREQ          10
-#define AM_AODV_RREP          11
-#define AM_AODV_RERR          12
-#define AM_AODV_MSG           13
+
 
 configuration AODV {
   provides {
@@ -39,7 +37,10 @@ implementation {
   
   components new AMSenderC(AM_AODV_RREQ) as MHSendRREQ, 
              new AMSenderC(AM_AODV_RREP) as MHSendRREP, 
-             new AMSenderC(AM_AODV_RERR) as MHSendRERR;
+             new AMSenderC(AM_AODV_RERR) as MHSendRERR,
+             new AMSenderC(AM_AODV_HELLO) as MHSendHELLO;
+
+  AODV_M.SendHELLO -> MHSendHELLO;
   AODV_M.SendRREQ -> MHSendRREQ;
   AODV_M.SendRREP -> MHSendRREP;
   AODV_M.SendRERR -> MHSendRERR;
@@ -47,7 +48,8 @@ implementation {
   components new AMSenderC(AM_AODV_MSG) as MHSend;
   AODV_M.SubSend -> MHSend;
   
-  components new AMReceiverC(AM_AODV_RREQ) as MHReceiveRREQ, 
+  components new AMReceiverC(AM_AODV_HELLO) as MHReceiveHELLO;
+             new AMReceiverC(AM_AODV_RREQ) as MHReceiveRREQ, 
              new AMReceiverC(AM_AODV_RREP) as MHReceiveRREP, 
              new AMReceiverC(AM_AODV_RERR) as MHReceiveRERR;
   AODV_M.ReceiveRREQ -> MHReceiveRREQ;
