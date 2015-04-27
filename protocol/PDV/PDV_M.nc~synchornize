@@ -38,7 +38,7 @@ module PDV_M {
 
 implementation {
 
-  message_t hello_msg_;
+  mssage_t hello_msg_;
   message_t rreq_msg_;
   message_t rrep_msg_;
   message_t rerr_msg_;
@@ -54,7 +54,6 @@ implementation {
   
   uint8_t hello_seq_ = 0;
   uint8_t rreq_seq_ = 0;
-  uint16_t threshold = 0xffff / 2; 
   
   bool hello_pending_   = FALSE;
   bool send_pending_    = FALSE;
@@ -72,7 +71,7 @@ implementation {
   PDV_ROUTE_TABLE route_table_[PDV_ROUTE_TABLE_SIZE];
   PDV_RREQ_CACHE rreq_cache_[PDV_RREQ_CACHE_SIZE];
 
-  bool sendHELLO(am_addr_t dest, bool forward);
+  bool SendHELLO(am_addr_t dest, bool forward);
   task void resendHELLO();
   
   bool sendRREQ( am_addr_t dest, bool forward );
@@ -141,7 +140,7 @@ implementation {
   
   event void AMControl.startDone( error_t e ) {
     if ( e == SUCCESS ) {
-      sendHELLO(TOS_BCAST_ADDR,FALSE);
+
       call PDVTimer.startPeriodic( PDV_DEFAULT_PERIOD );
       signal SplitControl.startDone(e);
     } else {
@@ -160,22 +159,17 @@ implementation {
   //-------------------------------------------------------------------------
 
   bool sendHELLO(am_addr_t dest, bool forward){
-    send_hello_hdr* hello_hdr = (send_hello_hdr*) (p_hello_msg_ -> data);
+    send_Hello_hdr* hello_hdr = (send_Hello_hdr*) (p_hello_msg_ -> data);
 
     if( forward == FALSE) {  //when the node starts, it first communication with their neighborhood.
       hello_hdr->seq = hello_seq_++;
       hello_hdr->hello = HELLO;
       hello_hdr->src = TOS_NODE_ID;  //My own id.
+
+      if(call SendHELLO.send(TOS_BCAST_ADDR, p_hello_msg_, PDV_HELLO_HEADER_LEN) == SUCCESS){
+          return true;
       }
-
-      if( !send_pending_){
-
-        if(call SendHELLO.send(dest, p_hello_msg_, PDV_HELLO_HEADER_LEN) == SUCCESS){
-          send_pending_ = true;
-            return TRUE;
-        }
     }
-    
   }
 
   //--------------------------------------------------------------------------
@@ -654,10 +648,7 @@ implementation {
     return FAIL;
   }
   
-event void SendHELLO.sendDone(message_t* p_msg, error_t e){
-  send_pending_ = FALSE;
-}
-
+  
   //--------------------------------------------------------------------------
   //  SendRREQ.sendDone: If the RREQ transmission is finished, it will release
   //  the RREQ and SEND pendings.
@@ -697,7 +688,7 @@ event void SendHELLO.sendDone(message_t* p_msg, error_t e){
   }
   
 
-  //--------------------------------------------------------------------------
+  /--------------------------------------------------------------------------
   //  ReceiveHELLO.receive: If the neighborhood of the source receives hello frame, the node will
   //  send the hello back to establish one path between in the route table. 
   //--------------------------------------------------------------------------
@@ -727,8 +718,6 @@ event void SendHELLO.sendDone(message_t* p_msg, error_t e){
                                                  void* payload, uint8_t len ) {
     bool cached = FALSE;
     bool added  = FALSE;
-    uint16_t randNumber = call Random.rand16();
-
     
     am_addr_t me  = call AMPacket.address();
     am_addr_t src = call AMPacket.source( p_msg );
@@ -774,11 +763,8 @@ event void SendHELLO.sendDone(message_t* p_msg, error_t e){
       rreq_PDV_hdr->dest = PDV_hdr->dest;
       rreq_PDV_hdr->src  = PDV_hdr->src;
       rreq_PDV_hdr->hop  = PDV_hdr->hop + 1;
-      
-      if( randNumber > threshold){
-        call RREQTimer.stop();
-        call RREQTimer.startOneShot( (call Random.rand16() % 7) * 10 );
-      }
+      call RREQTimer.stop();
+      call RREQTimer.startOneShot( (call Random.rand16() % 7) * 10 );
     }
     
     return p_msg;
@@ -843,6 +829,16 @@ event void SendHELLO.sendDone(message_t* p_msg, error_t e){
     return call Packet.getPayload(m, 0);
   }
   
+  /*
+  command void * Receive.getPayload[uint8_t am](message_t *msg, uint8_t *len){
+    return call Packet.getPayload(msg, len);
+  }
+  
+  
+  command uint8_t Receive.payloadLength[uint8_t am](message_t *msg){
+    return call Packet.payloadLength(msg);
+  }
+  */
   
   /***************** SubSend Events ****************/
   event void SubSend.sendDone(message_t* p_msg, error_t e) {

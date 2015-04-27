@@ -40,12 +40,12 @@ implementation {
   components new AMSenderC(AM_PDV_MSG) as MHSend;
   PDV_M.SubSend -> MHSend;
   
-  components new AMReceiverC(AM_PDV_HELLO) as MHReceiveHELLO;
+  components new AMReceiverC(AM_PDV_HELLO) as MHReceiveHELLO,
              new AMReceiverC(AM_PDV_RREQ) as MHReceiveRREQ, 
              new AMReceiverC(AM_PDV_RREP) as MHReceiveRREP, 
              new AMReceiverC(AM_PDV_RERR) as MHReceiveRERR;
 
-  PDV_M.ReceiveHELLO -> MH$ReceiveHELLO;
+  PDV_M.ReceiveHELLO -> MHReceiveHELLO;
   PDV_M.ReceiveRREQ -> MHReceiveRREQ;
   PDV_M.ReceiveRREP -> MHReceiveRREP;
   PDV_M.ReceiveRERR -> MHReceiveRERR;

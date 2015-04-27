@@ -15,12 +15,12 @@ enum{
 typedef nx_struct{
   nx_uint8_t seq;
   nx_uint16_t hello;
-  am_addr_t src;
+  nx_am_addr_t src;
 } send_hello_hdr;
 
 typedef nx_struct{
   nx_uint8_t seq;
-  am_addr_t me;
+  nx_am_addr_t me;
 } receive_hello_hdr;
 
 typedef nx_struct {
@@ -71,7 +71,7 @@ typedef struct {
 } PDV_RREQ_CACHE;
 
 
-#define PDV_HELLO_HEADER_LEN sizeof(PDV_hello_hdr)
+#define PDV_HELLO_HEADER_LEN sizeof(send_hello_hdr)
 #define PDV_RREQ_HEADER_LEN  sizeof(PDV_rreq_hdr)
 #define PDV_RREP_HEADER_LEN  sizeof(PDV_rrep_hdr)
 #define PDV_RERR_HEADER_LEN  sizeof(PDV_rerr_hdr)
