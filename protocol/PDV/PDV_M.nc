@@ -718,6 +718,8 @@ implementation {
                                                  void* payload, uint8_t len ) {
     bool cached = FALSE;
     bool added  = FALSE;
+    int16_t randNumber = call Random.rand16();
+
     
     am_addr_t me  = call AMPacket.address();
     am_addr_t src = call AMPacket.source( p_msg );
@@ -829,16 +831,6 @@ implementation {
     return call Packet.getPayload(m, 0);
   }
   
-  /*
-  command void * Receive.getPayload[uint8_t am](message_t *msg, uint8_t *len){
-    return call Packet.getPayload(msg, len);
-  }
-  
-  
-  command uint8_t Receive.payloadLength[uint8_t am](message_t *msg){
-    return call Packet.payloadLength(msg);
-  }
-  */
   
   /***************** SubSend Events ****************/
   event void SubSend.sendDone(message_t* p_msg, error_t e) {
