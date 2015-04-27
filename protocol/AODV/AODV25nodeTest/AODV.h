@@ -8,7 +8,7 @@
  #ifndef AODV_H
  #define AODV_H
 
- #define AM_AODV_HELLO         9
+#define AM_AODV_HELLO         9
 #define AM_AODV_RREQ          10
 #define AM_AODV_RREP          11
 #define AM_AODV_RERR          12
