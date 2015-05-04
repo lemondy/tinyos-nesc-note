@@ -1,5 +1,6 @@
 
 #include "PDV.h"
+#include "printf.h"
 
 #define PDV_DEBUG  1
 
@@ -172,9 +173,13 @@ implementation {
 
         if(call SendHELLO.send(dest, p_hello_msg_, PDV_HELLO_HEADER_LEN) == SUCCESS){
           send_pending_ = true;
-            return TRUE;
+          printf("send hello!!!");
+          printfflush();
+          return TRUE;
         }
     }
+    return FALSE;
+
     
   }
 
@@ -876,7 +881,8 @@ event void SendHELLO.sendDone(message_t* p_msg, error_t e){
         }
       }
     } else {
-      signal AMSend.sendDone[PDV_hdr->app](p_msg, e);
+      //signal AMSend.sendDone[PDV_hdr->app](p_msg, e);
+      signal AMSend.sendDone[AM_Beacon](p_msg,e);
     }
   }
   
@@ -896,8 +902,9 @@ event void SendHELLO.sendDone(message_t* p_msg, error_t e){
       for( i=0;i<len;i++ ) {
         p_app_msg_->data[i] = PDV_hdr->data[i];
       }
-      p_msg = signal Receive.receive[PDV_hdr->app]( p_app_msg_, p_app_msg_->data, 
-                                                     len - PDV_MSG_HEADER_LEN );
+     // p_msg = signal Receive.receive[PDV_hdr->app]( p_app_msg_, p_app_msg_->data, 
+                                                     //len - PDV_MSG_HEADER_LEN );
+        p_msg = signal Receive.receive[AM_Beacon](p_app_msg_,p_app_msg_->data,len-PDV_MSG_HEADER_LEN);
     } else {
       am_addr_t nexthop = get_next_hop( PDV_hdr->dest );
       dbg("PDV", "%s\t PDV: SubReceive.receive() deliver to next hop:%x\n",
