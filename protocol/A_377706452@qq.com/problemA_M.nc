@@ -34,15 +34,17 @@ implementation {
 
  BeaconMsg cache_table[CACHE_SIZE];
  neighboor_node_table neighboor_table[NEIGHBOOR_SIZE];
+ //消息队列，记录本节点要发送的消息
+ //BeaconMsg msgQueue[100];
  stop_bcast* stopb;
 
  bool isStopBcast = FALSE;
 
  uint16_t i;
  uint16_t j;
- uint16_t k;
+ uint8_t k;
 
- void sendHello(am_addr_t dest);
+ void sendHello(am_addr_t addr);
   
   event void Boot.booted() {
    
@@ -83,11 +85,11 @@ implementation {
       call Leds.led2Off();
   }
 
-  void sendHello(am_addr_t dest){
+  void sendHello(am_addr_t addr){
     send_hello* sendhello = (send_hello*) (p_pkt->data);
     sendhello->hello = HELLO;
 
-    call SendHello.send(dest,p_pkt,sizeof(send_hello));
+    call SendHello.send(addr,p_pkt,sizeof(send_hello));
   }
   
   event void SplitControl.startDone(error_t err) {
@@ -116,7 +118,7 @@ implementation {
  }
 
  bool add_neighboor(am_addr_t id){
-  neighboor_table[k] = id;
+  neighboor_table[k].neighboor = id;
   k++;
  }
 
