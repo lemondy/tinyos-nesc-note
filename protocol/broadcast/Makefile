@@ -1,0 +1,9 @@
+COMPONENT=BeaconAppC
+
+CFLAGS+=-DCC2420_DEF_CHANNEL=20 
+#通信信道20
+CFLAGS+=-DCC2420_DEF_RFPOWER=31
+#功率31，非数据源源节点功率将强制设定为1
+
+include $(MAKERULES)
+

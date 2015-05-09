@@ -8,8 +8,6 @@ enum {
   INVALIDATE_NODE_ID = 0xff,
   STOP = 0x1010,    
   NEIGHBOOR_SIZE = 20,
-  QUEUE_SIZE = 50,
-  HOP = 4,
   HELLO = 0xaa
 };
 
@@ -18,13 +16,6 @@ typedef nx_struct BeaconMsg {
   nx_uint16_t nodeidk;
   nx_uint16_t serialnumber;
 } BeaconMsg;
-
-typedef nx_struct{
-  nx_uint16_t nodeidi;
-  nx_uint16_t nodeidk;
-  nx_uint16_t serialnumber;
-  nx_uint8_t  counter;
-} newBeaconMsg;
 
 typedef nx_struct {
 	nx_uint16_t stop;

@@ -24,7 +24,11 @@ implementation {
   problemA_M.Random -> RandomC;
   
   components new TimerMilliC() as OutTimer;
+  components new TimerMilliC() as HelloTimer;
+  components new TimerMilliC() as MessageTimer;
 
+  problemA_M.HelloTimer -> HelloTimer;
   problemA_M.OutTimer -> OutTimer;
+  problemA_M.MessageTimer -> MessageTimer;
 }
 
