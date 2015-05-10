@@ -87,14 +87,14 @@ implementation {
   }
   
   event void SplitControl.startDone(error_t err) {
-    uint8_t startTime = call Random.rand16() % 9; //控制发送hello的起始时间
+    uint8_t startTime = call Random.rand16() % 7; //控制发送hello的起始时间
     if (startTime == 0) startTime = 1;
 
     if (err == SUCCESS) {
       p_pkt = &pkt;
-      call OutTimer.startPeriodic(50);
+      call OutTimer.startPeriodic(30);
       call HelloTimer.startOneShot(startTime * 1000);  //这里要设置时间在10秒内
-      call MessageTimer.startPeriodic(100);   //定期扫描
+      call MessageTimer.startPeriodic(80);   //定期扫描
     } else {
       call SplitControl.start();
     }
@@ -177,11 +177,11 @@ event void OutTimer.fired(){
 
   //扫描消息队列 
   event void MessageTimer.fired(){
-    BeaconMsg* msg = (BeaconMsg*) p_pkt -> data;
+     BeaconMsg* msg;
     if(!isQueueEmpty()){
       if(!busy){
         p_pkt = deQueue();
-        
+        msg = (BeaconMsg*) p_pkt -> data;
         dest = msg->nodeidk;
         forwardMsg(dest,p_pkt);
         busy = TRUE;
@@ -191,7 +191,7 @@ event void OutTimer.fired(){
 
   bool forwardMsg(am_addr_t addr,message_t* msg){
     if(isNeighboor(addr)){ //若存在邻居表中，直接发送
-      call AMSend.send(dest,msg,sizeof(BeaconMsg));
+      call AMSend.send(addr,msg,sizeof(BeaconMsg));
     }else{
       call AMSend.send(TOS_BCAST_ADDR,msg,sizeof(BeaconMsg));  
     }
