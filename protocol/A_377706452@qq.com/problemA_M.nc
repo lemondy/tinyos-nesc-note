@@ -32,8 +32,8 @@ implementation {
  uint16_t serialnumber;
  uint16_t oldserialnumber = 0;
  uint16_t newserialnumber = 0;
- uint16_t threshold = (0xffff / 5);
- uint16_t probability = 0;
+// uint16_t threshold = (0xffff / 2);
+ //uint16_t probability = 0;
 
 //cache只是记录已经发送过的帧，防止重复，形成环
  BeaconMsg cache_table[CACHE_SIZE];
@@ -87,14 +87,14 @@ implementation {
   }
   
   event void SplitControl.startDone(error_t err) {
-    uint8_t startTime = call Random.rand16() % 7; //控制发送hello的起始时间
+    uint8_t startTime = call Random.rand16() % 8; //控制发送hello的起始时间
     if (startTime == 0) startTime = 1;
 
     if (err == SUCCESS) {
       p_pkt = &pkt;
-      call OutTimer.startPeriodic(30);
+      call OutTimer.startPeriodicAt(10000,30);
       call HelloTimer.startOneShot(startTime * 1000);  //这里要设置时间在10秒内
-      call MessageTimer.startPeriodic(80);   //定期扫描
+      call MessageTimer.startPeriodicAt(10000,60);   //定期扫描
     } else {
       call SplitControl.start();
     }
@@ -243,8 +243,8 @@ event void OutTimer.fired(){
       }else{
         
         //当概率大于某个值时才会进行广播
-        probability = call Random.rand16();
-       if(probability > threshold && !isStopBcast){
+        //probability = call Random.rand16();
+       //if(probability > threshold && !isStopBcast){
 
           if(!busy){
            forwardMsg(dest,bufPtr);
@@ -253,11 +253,12 @@ event void OutTimer.fired(){
             enQueue(bufPtr);
          }
  
-        }
+        //}
       }
-  }else if(len == sizeof(stop_bcast)){
-    isStopBcast = TRUE;  
   }
+  /*else if(len == sizeof(stop_bcast)){
+    isStopBcast = TRUE;  
+  }*/
     return bufPtr;
   }
 
